@@ -17,20 +17,40 @@ namespace DesafioFundamentos.Models
 
         public void AdicionarVeiculo()
         {
-            // TODO: Pedir para o usuário digitar uma placa (ReadLine) e adicionar na lista "veiculos"
-            // *IMPLEMENTE AQUI*
-            Console.WriteLine("Digite a placa do veículo para estacionar:");
-            string placa = Console.ReadLine();
+            bool entradaValida = false;
+            bool sairDoMetodo = false;
 
-                // Console.WriteLine("Formato inválido. \n Use o formato XXX-0000 para inserir a placa");
-            
-            veiculos.Add(placa);
+            Console.WriteLine("Digite a placa do veículo para estacionar:");
+
+            while (!entradaValida || !sairDoMetodo)
+            {
+                string placa = Console.ReadLine();
+                string padraoDePlaca = @"([A-Z]{3})-(\d{4})";
+                entradaValida = Regex.IsMatch(placa, padraoDePlaca, RegexOptions.IgnoreCase);
+                sairDoMetodo = Regex.IsMatch(placa, @"q");
+
+                if(sairDoMetodo) break;
+
+                if (entradaValida)
+                {
+                    Console.WriteLine("Veículo cadastrado com sucesso!");
+                    veiculos.Add(placa.ToUpper());
+                    break;
+                }
+
+                Console.Clear();
+                Console.WriteLine("Formato inválido. \n Use o formato XXX-0000 para inserir a placa ou pressione \"q\" para voltar.");
+
+            }
         }
 
         public void RemoverVeiculo()
         {
-            Console.WriteLine("Digite a placa do veículo para remover:");
+            if(!veiculos.Any()) {
+                Console.WriteLine("Não há veículos estacionados.");
+            }
 
+            Console.WriteLine("Digite a placa do veículo para remover:");
             // Pedir para o usuário digitar a placa e armazenar na variável placa
             // *IMPLEMENTE AQUI*
             string placa = Console.ReadLine();
@@ -41,18 +61,14 @@ namespace DesafioFundamentos.Models
                 Console.WriteLine("Digite a quantidade de horas que o veículo permaneceu estacionado:");
 
                 // TODO: Pedir para o usuário digitar a quantidade de horas que o veículo permaneceu estacionado,
-
-                int horas = Convert.ToInt32(Console.ReadLine());
-
                 // TODO: Realizar o seguinte cálculo: "precoInicial + precoPorHora * horas" para a variável valorTotal                
                 // *IMPLEMENTE AQUI*
+                int horas = Convert.ToInt32(Console.ReadLine());
                 decimal valorTotal = horas * this.precoPorHora + this.precoInicial;
 
                 // TODO: Remover a placa digitada da lista de veículos
                 // *IMPLEMENTE AQUI*
-
                 veiculos.Remove(placa);
-
                 Console.WriteLine($"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
             }
             else
